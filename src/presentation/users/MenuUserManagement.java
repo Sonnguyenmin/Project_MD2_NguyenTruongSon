@@ -1,4 +1,2 @@
-package presentation.users;
-
-public class MenuUserManagement {
+package presentation.users;public class MenuUserManagement {
 }
