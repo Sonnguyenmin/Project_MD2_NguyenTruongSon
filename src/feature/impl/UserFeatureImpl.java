@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserFeatureImpl implements IUser {
 
-    public static List<User> userList;
+    public static List<User> userList = (List<User>) IOFiles.readFromFile(IOFiles.USER_PATH);
 
     public UserFeatureImpl() {
         List<User> users = (List<User>) IOFiles.readFromFile(IOFiles.USER_PATH);
@@ -28,11 +28,11 @@ public class UserFeatureImpl implements IUser {
 
     @Override
     public void save(User element) {
-        if (findById(element.getUser_id()) == null) {
+        if (findById(element.getUserId()) == null) {
             userList.add(element);
         }
         else {
-            userList.set(userList.indexOf(findById(element.getUser_id())), element);
+            userList.set(userList.indexOf(findById(element.getUserId())), element);
         }
         IOFiles.writeToFile(userList, IOFiles.USER_PATH);
     }
@@ -50,7 +50,7 @@ public class UserFeatureImpl implements IUser {
     @Override
     public User findById(Integer id) {
         for (User user : userList) {
-            if (user.getUser_id() == id) {
+            if (user.getUserId() == id) {
                 return user;
             }
         }
@@ -61,8 +61,8 @@ public class UserFeatureImpl implements IUser {
     public Integer getNewId() {
         int maxId = 0;
         for (User user : userList) {
-            if (user.getUser_id() > maxId) {
-                maxId = user.getUser_id();
+            if (user.getUserId() > maxId) {
+                maxId = user.getUserId();
             }
         }
         return maxId + 1;

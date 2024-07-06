@@ -2,47 +2,47 @@ package entity;
 
 import java.io.Serializable;
 
-public class Wish_List implements Serializable  {
-    private int wish_list_id;
-    private User user_id;
-    private Products product_id;
+public class WishList implements Serializable  {
+    private int wishListId;
+    private User userId;
+    private Products productId;
 
-    public Wish_List() {
+    public WishList() {
     }
 
-    public Wish_List(int wish_list_id, User user_id, Products product_id) {
-        this.wish_list_id = wish_list_id;
-        this.user_id = user_id;
-        this.product_id = product_id;
+    public WishList(int wishListId, User userId, Products productId) {
+        this.wishListId = wishListId;
+        this.userId = userId;
+        this.productId = productId;
     }
 
-    public int getWish_list_id() {
-        return wish_list_id;
+    public int getWishListId() {
+        return wishListId;
     }
 
-    public void setWish_list_id(int wish_list_id) {
-        this.wish_list_id = wish_list_id;
+    public void setWishListId(int wishListId) {
+        this.wishListId = wishListId;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user_id) {
-        this.user_id = user_id;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
-    public Products getProduct_id() {
-        return product_id;
+    public Products getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(Products product_id) {
-        this.product_id = product_id;
+    public void setProductId(Products productId) {
+        this.productId = productId;
     }
 
     public void inputData(User user, Products product) {
-        this.user_id = user;
-        this.product_id = product;
+        this.userId = user;
+        this.productId = product;
     }
 
     public void displayData() {
@@ -50,7 +50,7 @@ public class Wish_List implements Serializable  {
 //        System.out.println("| ID |    Tên Người dùng   |    Tên sản phẩm    |");
 //        System.out.println("+----+---------------------+--------------------+");
         System.out.printf("| %-2d |   %-15s   |  %-16s  |\n"
-                ,this.wish_list_id, this.user_id.getUserName(), this.product_id.getProduct_name());
+                ,this.wishListId, this.userId.getUserName(), this.productId.getProductName());
         System.out.println("+----+---------------------+--------------------+");
 
     }

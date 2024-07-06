@@ -1,39 +1,43 @@
 package entity;
 
+import feature.impl.CategoriesFeatureImpl;
 import util.InputMethods;
+import util.Messages;
 
 import java.io.Serializable;
 
+import static util.Colors.*;
+
 public class Category implements Serializable {
-    private int category_id;
-    private String category_name;
+    private int categoryId;
+    private String categoryName;
     private String description;
     private boolean status;
 
     public Category() {
     }
 
-    public Category(int category_id, String category_name, String description, boolean status) {
-        this.category_id = category_id;
-        this.category_name = category_name;
+    public Category(int categoryId, String categoryName, String description, boolean status) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
         this.description = description;
         this.status = status;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getCategory_name() {
-        return category_name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCategory_name(String category_name) {
-        this.category_name = category_name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getDescription() {
@@ -54,11 +58,34 @@ public class Category implements Serializable {
 
     public void inputData() {
         System.out.println("Mời bạn nhập vào tên danh mục: ");
-        this.category_name = InputMethods.getString();
+//        this.categoryName = InputMethods.getString();
+        this.categoryName = inputCateName();
         System.out.println("Mời bạn nhập vào mô tả danh mục: ");
         this.description = InputMethods.getString();
         System.out.println("Mời bạn nhập vào trạng thái danh mục: ");
         this.status = InputMethods.getBoolean();
+    }
+
+    public String inputCateName () {
+        do{
+            String cateName = InputMethods.getString();
+            if (cateName.trim().isEmpty()) {
+                System.err.println(Messages.IS_EMPTY);
+            }
+            boolean isExist = false;
+            for (Category category : CategoriesFeatureImpl.categoryList) {
+                if (category.getCategoryName().equals(cateName)) {
+                    isExist = true;
+                    break;
+                }
+            }
+
+            if (isExist) {
+                System.err.println(RED + "Tên danh mục đã tồn tại, vui lòng nhập lại." + RESET);
+            } else {
+                return cateName;
+            }
+        } while (true);
     }
 
 
@@ -67,7 +94,7 @@ public class Category implements Serializable {
 //        System.out.println("| ID | Tên danh mục |               Mô tả danh mục                 |     Trạng thái     |");
 //        System.out.println("+----+--------------+----------------------------------------------+--------------------+");
         System.out.printf("| %-2d | %-16s     | %-36s         | %-16s   |\n"
-                ,this.category_id,this.category_name, this.description,this.status  ? "Hiển thị" : "Không hiển thị");
+                ,this.categoryId,this.categoryName, this.description,this.status  ? "Hiển thị" : "Không hiển thị");
         System.out.println("+----+----------------------+----------------------------------------------+--------------------+");
     }
 }

@@ -5,6 +5,7 @@ import entity.User;
 import feature.impl.UserFeatureImpl;
 import presentation.admin.MenuAdminManagement;
 import presentation.moderator.ModeratorManagement;
+import presentation.users.MenuHomeManagement;
 import presentation.users.MenuUserManagement;
 import util.InputMethods;
 import util.Messages;
@@ -15,13 +16,14 @@ import static util.Colors.*;
 
 public class MenuManagement {
 
-    static final UserFeatureImpl userFeature = new UserFeatureImpl();
+    public static UserFeatureImpl userFeature = new UserFeatureImpl();
+    public static User userLogin = null;
 
     public static void main(String[] args) {
         do {
             System.out.println(BLUE + "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━WEB BÁN HÀNG━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
             System.out.println("┃                           ┃                             ┃                          ┃                          ┃                          ┃");
-            System.out.println("┃   " + PURPLE + "1. HiỂN THỊ SẢN PHẨM    " + BLUE + "┃       " + YELLOW + "2. ĐĂNG NHẬP          " + BLUE + "┃     " + GREEN + "   3. ĐĂNG KÝ   " + BLUE + "     ┃    " + WHITE + "4. QUÊN MẬT KHẨU      " + BLUE + "┃"  + RED + "          5. THOÁT  " + BLUE + "      ┃");
+            System.out.println("┃      " + PURPLE + "1. TRANG CHỦ         " + BLUE + "┃       " + YELLOW + "2. ĐĂNG NHẬP          " + BLUE + "┃     " + GREEN + "   3. ĐĂNG KÝ   " + BLUE + "     ┃    " + WHITE + "4. QUÊN MẬT KHẨU      " + BLUE + "┃"  + RED + "          5. THOÁT  " + BLUE + "      ┃");
             System.out.println("┃                           ┃                             ┃                          ┃                          ┃                          ┃");
             System.out.println("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
             System.out.println(Messages.CHOICE);
@@ -29,7 +31,7 @@ public class MenuManagement {
             System.out.println();
             switch (choice) {
                 case 1:
-                    showListProduct();
+                    new MenuHomeManagement();
                     break;
                 case 2:
                     inputLogin();
@@ -49,9 +51,6 @@ public class MenuManagement {
         } while (true);
     }
 
-    public static void showListProduct() {
-
-    }
     public static void inputLogin() {
         System.out.println("Nhập vào tên đăng nhập: ");
         String username = InputMethods.getString();
@@ -60,44 +59,46 @@ public class MenuManagement {
         User user = userFeature.login(username, password);
         if (user == null) {
             System.err.println(Messages.SIGN_IN_FAILED);
+            return;
         }
-        else {
-            if (user.getRoles().equals(Roles.ROLE_ADMIN)) {
-                new MenuAdminManagement();
-            } else if (user.getRoles().equals(Roles.ROLE_MODERATOR)) {
-                new ModeratorManagement();
-            } else {
-                if (user.isStatus()) {
-                    System.out.println(GREEN + "Bạn đã đăng nhập thành công" + RESET);
-                    new MenuUserManagement();
-                }
-                else  {
-                    System.err.println(Messages.ACCOUNT_BLOCKS);
-                }
+        userLogin = user;
+        if (user.getRoles().equals(Roles.ROLE_ADMIN)) {
+            System.out.println(Messages.SIGN_IN_SUCCESS);
+            new MenuAdminManagement();
+        } else if (user.getRoles().equals(Roles.ROLE_MODERATOR)) {
+            System.out.println(Messages.SIGN_IN_SUCCESS);
+            new ModeratorManagement();
+        } else {
+            if (user.isStatus()) {
+                System.out.println(Messages.SIGN_IN_SUCCESS);
+                new MenuUserManagement();
+            }
+            else  {
+                System.err.println(Messages.ACCOUNT_BLOCKS);
             }
         }
-        System.out.println();
+
     }
     public static void inputRegister() {
         User user = new User();
-        user.setUser_id(userFeature.getNewId());
+        user.setUserId(userFeature.getNewId());
         user.inputData();
-        System.out.println("Xác nhận mật khẩu: ");
+        System.out.println(BLUE + "Xác nhận mật khẩu: " + RESET);
         String confirmPassword = InputMethods.getString();
         if (Validate.usernames(user.getUserName())) {
             if (Validate.password(user.getPassword())) {
                 user.setPassword(user.getPassword());
                 if (user.getPassword().equals(confirmPassword)) {
-                    System.out.println(GREEN + "Đăng ký thành công!" + RESET);
+                    System.out.println(Messages.REGISTER_SUCCESS);
                     userFeature.save(user);
                 } else {
-                    System.err.println("Mật khẩu không khớp. Vui lòng thử lại.");
+                    System.err.println(RED + "Mật khẩu không khớp. Vui lòng thử lại." + RESET);
                 }
             } else {
-                System.err.println("Mật khẩu không hợp lệ. Vui lòng thử lại.");
+                System.err.println(RED + "Mật khẩu không hợp lệ. Vui lòng thử lại." + RESET);
             }
         } else {
-            System.err.println("Tên người dùng không hợp lệ. Vui lòng thử lại.");
+            System.err.println(RED + "Tên người dùng không hợp lệ. Vui lòng thử lại." + RESET);
         }
     }
     public static void forgetPassword() {
@@ -114,14 +115,13 @@ public class MenuManagement {
             return;
         }
         String newPassword = newPassword();
-        System.out.println("Mật khẩu mới là: " + newPassword);
+        System.out.println(YELLOW + "Mật khẩu mới là: " + newPassword + RESET);
         myUser.setPassword(newPassword);
         userFeature.save(myUser);
     }
 
-    private static String newPassword() {
+    public static String newPassword() {
         String result = null;
-
         for (int i = 0; i < 5; i++) {
             if (result == null) {
                 result = String.valueOf((int) Math.ceil(Math.random() * 9));

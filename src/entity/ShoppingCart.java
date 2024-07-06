@@ -6,59 +6,59 @@ import java.io.Serializable;
 
 import static util.Colors.*;
 
-public class Shopping_Cart implements Serializable {
-    private int shopping_cart_id;
-    private Products product_id;
-    private User user_id;
-    private int order_quantity;
+public class ShoppingCart implements Serializable {
+    private int shoppingCartId;
+    private Products productId;
+    private User userId;
+    private int orderQuantity;
 
-    public Shopping_Cart() {
+    public ShoppingCart() {
     }
 
-    public Shopping_Cart(int shopping_cart_id, Products product_id, User user_id, int order_quantity) {
-        this.shopping_cart_id = shopping_cart_id;
-        this.product_id = product_id;
-        this.user_id = user_id;
-        this.order_quantity = order_quantity;
+    public ShoppingCart(int shoppingCartId, Products productId, User userId, int orderQuantity) {
+        this.shoppingCartId = shoppingCartId;
+        this.productId = productId;
+        this.userId = userId;
+        this.orderQuantity = orderQuantity;
     }
 
-    public int getShopping_cart_id() {
-        return shopping_cart_id;
+    public int getShoppingCartId() {
+        return shoppingCartId;
     }
 
-    public void setShopping_cart_id(int shopping_cart_id) {
-        this.shopping_cart_id = shopping_cart_id;
+    public void setShoppingCartId(int shoppingCartId) {
+        this.shoppingCartId = shoppingCartId;
     }
 
-    public Products getProduct_id() {
-        return product_id;
+    public Products getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(Products product_id) {
-        this.product_id = product_id;
+    public void setProductId(Products productId) {
+        this.productId = productId;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser_id(User user_id) {
-        this.user_id = user_id;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
-    public int getOrder_quantity() {
-        return order_quantity;
+    public int getOrderQuantity() {
+        return orderQuantity;
     }
 
-    public void setOrder_quantity(int order_quantity) {
-        this.order_quantity = order_quantity;
+    public void setOrderQuantity(int orderQuantity) {
+        this.orderQuantity = orderQuantity;
     }
 
     public void inputData(User user, Products product) {
-        this.user_id = user;
-        this.product_id = product;
+        this.userId = user;
+        this.productId = product;
         System.out.println(BLUE + "Mời bạn nhập vào số lượng muốn mua: " + RESET);
-        this.order_quantity = InputMethods.getIntegerQuantity(product);
+        this.orderQuantity = InputMethods.getIntegerQuantity(product);
     }
 
     public void displayData() {
@@ -66,7 +66,7 @@ public class Shopping_Cart implements Serializable {
 //        System.out.println("| ID | Tên người dùng |   Tên sản phẩm   | Số lượng sản phẩm |");
 //        System.out.println("+----+----------------+------------------+-------------------+");
         System.out.printf("| %-2d |   %-10s   |  %-14s  |       %-5d       |\n"
-                ,this.shopping_cart_id ,this.getUser_id().getUserName(),this.getProduct_id().getProduct_name(), this.order_quantity);
+                ,this.shoppingCartId ,this.getUserId().getUserName(),this.getProductId().getProductName(), this.orderQuantity);
         System.out.println("+----+----------------+------------------+-------------------+");
     }
 }

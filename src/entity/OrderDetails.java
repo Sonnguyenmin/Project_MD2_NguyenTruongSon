@@ -1,10 +1,10 @@
 package entity;
 
-public class Order_Details {
-    private int order_id;
-    private Products product_id;
+public class OrderDetails {
+    private int orderId;
+    private Products productId;
     private String name;
-    private double unit_price;
-    private int order_quantity;
+    private double unitPrice;
+    private int orderQuantity;
 
 }

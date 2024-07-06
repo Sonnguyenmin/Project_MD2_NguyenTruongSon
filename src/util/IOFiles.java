@@ -8,7 +8,10 @@ public class IOFiles {
     public static final String USER_PATH = "src/database/accountUser.txt";
     public static final String CATEGORY_PATH = "src/database/category.txt";
     public static final String PRODUCT_PATH = "src/database/product.txt";
-
+    public static final String ADDRESS_PATH = "src/database/address.txt";
+    public static final String SHOPPING_CART_PATH = "src/database/shoppingCart.txt";
+    public static final String Wish_List_PATH = "src/database/wishList.txt";
+    public static final String Order_PATH = "src/database/order.txt";
 
     public static void writeToFile(Object o, String path) {
         FileOutputStream fos = null;

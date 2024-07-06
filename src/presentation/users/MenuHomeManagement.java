@@ -4,7 +4,6 @@ import entity.Category;
 import entity.Products;
 import feature.impl.CategoriesFeatureImpl;
 import feature.impl.ProductsFeatureImpl;
-import feature.impl.UserFeatureImpl;
 import util.InputMethods;
 import util.Messages;
 
@@ -13,13 +12,12 @@ import java.util.Comparator;
 import static util.Colors.*;
 import static util.Colors.RESET;
 
-public class MenuUserManagement {
+public class MenuHomeManagement {
 
-    private final UserFeatureImpl userFeature = new UserFeatureImpl();
-    private final ProductsFeatureImpl productsFeature = new ProductsFeatureImpl();
-    private final CategoriesFeatureImpl categoriesFeature = new CategoriesFeatureImpl();
+    public ProductsFeatureImpl productsFeature = new ProductsFeatureImpl();
+    public CategoriesFeatureImpl categoriesFeature = new CategoriesFeatureImpl();
 
-    public MenuUserManagement() {
+    public MenuHomeManagement() {
         boolean isExist = true;
         do {
             System.out.println();
@@ -62,6 +60,8 @@ public class MenuUserManagement {
         } while (isExist);
     }
 
+
+
     private void ListProductByProductId() {
         System.out.println(BLUE + "Danh sách sản phẩm theo mã sản phẩm" + RESET);
         System.out.println();
@@ -86,11 +86,11 @@ public class MenuUserManagement {
         int selectedCategory = InputMethods.getInteger();
         Category category = categoriesFeature.findById(selectedCategory);
         if (category != null && category.isStatus()) {
-            System.out.println(BLUE + "Danh mục đã chọn: " + category.getCategory_id() + RESET);
+            System.out.println(BLUE + "Danh mục đã chọn: " + category.getCategoryId() + RESET);
             System.out.println();
             System.out.println("+----+------------------+--------------------------------------+----------------------------------+--------------+----------+------------------+----------------+------------+-------------------+");
             for (Products product : productsFeature.getAll()) {
-                if (product.getCategory_id().getCategory_id() == selectedCategory && product.getCategory_id().isStatus()) {
+                if (product.getCategoryId().getCategoryId() == selectedCategory && product.getCategoryId().isStatus()) {
                     product.displayData();
                 }
             }
@@ -105,7 +105,7 @@ public class MenuUserManagement {
         System.out.println();
         System.out.println("+----+------------------+--------------------------------------+----------------------------------+--------------+----------+------------------+----------------+------------+-------------------+");
         for (Products product : productsFeature.getAll()) {
-            if(product.getStock_quantity() > 0) {
+            if(product.getStockQuantity() > 0) {
                 product.displayData();
             }
         }
@@ -118,7 +118,7 @@ public class MenuUserManagement {
         boolean isExist = false;
         System.out.println("+----+------------------+--------------------------------------+----------------------------------+--------------+----------+------------------+----------------+------------+-------------------+");
         for (Products product : productsFeature.getAll()) {
-            if (product.getProduct_name().toLowerCase().contains(searchName.toLowerCase()) || product.getDescription().toLowerCase().contains(searchName.toLowerCase())) {
+            if (product.getProductName().toLowerCase().contains(searchName.toLowerCase()) || product.getDescription().toLowerCase().contains(searchName.toLowerCase())) {
                 product.displayData();
                 isExist = true;
             }
@@ -131,11 +131,10 @@ public class MenuUserManagement {
         }
     }
 
-
     private void  SortByNewestProduct(){
         System.out.println(BLUE + "Danh sách sản phẩm mới nhất" + RESET);
         System.out.println();
-        productsFeature.getAll().sort(Comparator.comparing(Products::getCreated_at).reversed());
+        productsFeature.getAll().sort(Comparator.comparing(Products::getCreatedAt).reversed());
         System.out.println("+----+------------------+--------------------------------------+----------------------------------+--------------+----------+------------------+----------------+------------+-------------------+");
         System.out.println("| ID |   Tên sản phẩm   |              sku                     |        Mô tả sản phẩm            | Giá sản phẩm | Số lượng |       image      |  danh mục      |  Ngày tạo  |   Ngày cập nhật   |");
         System.out.println("+----+------------------+--------------------------------------+----------------------------------+--------------+----------+------------------+----------------+------------+-------------------+");

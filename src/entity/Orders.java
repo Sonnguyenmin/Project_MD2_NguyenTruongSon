@@ -1,75 +1,84 @@
 package entity;
 
-import java.util.Date;
+import constants.OrderStatus;
+import util.InputMethods;
+import util.Validate;
 
-public class Orders {
-    private int order_id;
-    private String serial_number;
-    private int user_id;
-    private double total_price;
-    private boolean status;
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
+
+public class Orders implements Serializable {
+    private int orderId;
+    private String serialNumber;
+    private User userId;
+    private double totalPrice;
+    private OrderStatus orderStatus;
     private String note;
-    private String receive_name;
-    private String receive_address;
-    private String receive_phone;
-    private Date create_at;
-    private Date update_at;
+    private String receiveName;
+    private String receiveAddress;
+    private String receivePhone;
+    private Date createAt;
+    private Date receivedAt;
 
     public Orders() {
     }
 
-    public Orders(int order_id, String serial_number, int user_id, double total_price, boolean status, String note, String receive_name, String receive_address, String receive_phone, Date create_at, Date update_at) {
-        this.order_id = order_id;
-        this.serial_number = serial_number;
-        this.user_id = user_id;
-        this.total_price = total_price;
-        this.status = status;
+    public Orders(int orderId, String serialNumber, User userId, double totalPrice, OrderStatus orderStatus, String note, String receiveName, String receiveAddress, String receivePhone, Date createAt, Date receivedAt) {
+        this.orderId = orderId;
+        this.serialNumber = serialNumber;
+        this.userId = userId;
+        this.totalPrice = totalPrice;
+        this.orderStatus = orderStatus;
         this.note = note;
-        this.receive_name = receive_name;
-        this.receive_address = receive_address;
-        this.receive_phone = receive_phone;
-        this.create_at = create_at;
-        this.update_at = update_at;
+        this.receiveName = receiveName;
+        this.receiveAddress = receiveAddress;
+        this.receivePhone = receivePhone;
+        this.createAt = createAt;
+        this.receivedAt = receivedAt;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
-    public String getSerial_number() {
-        return serial_number;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setSerial_number(String serial_number) {
-        this.serial_number = serial_number;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
-    public double getTotal_price() {
-        return total_price;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setTotal_price(double total_price) {
-        this.total_price = total_price;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public boolean isStatus() {
-        return status;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public String getNote() {
@@ -80,46 +89,74 @@ public class Orders {
         this.note = note;
     }
 
-    public String getReceive_name() {
-        return receive_name;
+    public String getReceiveName() {
+        return receiveName;
     }
 
-    public void setReceive_name(String receive_name) {
-        this.receive_name = receive_name;
+    public void setReceiveName(String receiveName) {
+        this.receiveName = receiveName;
     }
 
-    public String getReceive_address() {
-        return receive_address;
+    public String getReceiveAddress() {
+        return receiveAddress;
     }
 
-    public void setReceive_address(String receive_address) {
-        this.receive_address = receive_address;
+    public void setReceiveAddress(String receiveAddress) {
+        this.receiveAddress = receiveAddress;
     }
 
-    public String getReceive_phone() {
-        return receive_phone;
+    public String getReceivePhone() {
+        return receivePhone;
     }
 
-    public void setReceive_phone(String receive_phone) {
-        this.receive_phone = receive_phone;
+    public void setReceivePhone(String receivePhone) {
+        this.receivePhone = receivePhone;
     }
 
-    public Date getCreate_at() {
-        return create_at;
+    public Date getCreateAt() {
+        return createAt;
     }
 
-    public void setCreate_at(Date create_at) {
-        this.create_at = create_at;
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 
-    public Date getUpdate_at() {
-        return update_at;
+    public Date getReceivedAt() {
+        return receivedAt;
     }
 
-    public void setUpdate_at(Date update_at) {
-        this.update_at = update_at;
+    public void setReceivedAt(Date receivedAt) {
+        this.receivedAt = receivedAt;
     }
 
+    public void inputData(User user, Address address, Products products, double totalPrice) {
+        this.serialNumber = UUID.randomUUID().toString();
+        this.userId = user;
+        this.totalPrice = totalPrice;
+        this.receiveAddress = address.getFullAddress();
+        this.receivePhone = address.getPhone();
+        this.receiveName = address.getReceiveName();
+        this.orderStatus = OrderStatus.WAITING;
+        this.note = InputMethods.getNode();
+        this.createAt = new Date();
+        this.receivedAt = Validate.inputReceiveAt(this.createAt);
+    }
 
+    public void displayData() {
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
+        System.out.println("+----+---------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+        System.out.println("| ID |     Tên khách hàng, Số seri     |    Tổng tiền    | Trạng thái đơn hàng |   Địa chỉ, Người nhận, Số điện thoại |   Ngày mua   |   Ngày nhân   |");
+        System.out.println("+----+---------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+
+        String formPrintFirst = "| %-3d |  %-29s  |  %-13  |   %-15s   |    %-30s   | %-12s | %-12s |";
+        String formPrintNext =  "|      |  %-29s  |        |           |    %-30s   |       |       |";
+        String formPrintLast =  "|      |         |        |           |    %-30s   |       |       |";
+        System.out.printf(formPrintFirst, this.orderId, this.userId.getUserName(), vndFormat.format(this.totalPrice), this.orderStatus, this.receiveName, sdf.format(this.createAt), sdf.format(this.receivedAt));
+        System.out.printf(formPrintNext, this.orderId, this.serialNumber, this.totalPrice, this.orderStatus, this.receiveAddress, sdf.format(this.createAt), sdf.format(this.receivedAt));
+        System.out.printf(formPrintLast, this.orderId, this.userId.getUserName(), this.totalPrice, this.orderStatus, this.receivePhone, sdf.format(this.createAt), sdf.format(this.receivedAt));
+        System.out.println("+----+---------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+    }
 }
+

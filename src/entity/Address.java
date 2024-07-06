@@ -1,45 +1,50 @@
 package entity;
 
-public class Address {
-    private int address_id;
-    private int user_id;
-    private String full_address;
+import util.InputMethods;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class Address implements Serializable {
+    private int addressId;
+    private User userId;
+    private String fullAddress;
     private String phone;
-    private String receive_name;
+    private String receiveName;
 
     public Address() {
     }
 
-    public Address(int address_id, int user_id, String full_address, String phone, String receive_name) {
-        this.address_id = address_id;
-        this.user_id = user_id;
-        this.full_address = full_address;
+    public Address(int addressId, User userId, String fullAddress, String phone, String receiveName) {
+        this.addressId = addressId;
+        this.userId = userId;
+        this.fullAddress = fullAddress;
         this.phone = phone;
-        this.receive_name = receive_name;
+        this.receiveName = receiveName;
     }
 
-    public int getAddress_id() {
-        return address_id;
+    public int getAddressId() {
+        return addressId;
     }
 
-    public void setAddress_id(int address_id) {
-        this.address_id = address_id;
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
-    public String getFull_address() {
-        return full_address;
+    public String getFullAddress() {
+        return fullAddress;
     }
 
-    public void setFull_address(String full_address) {
-        this.full_address = full_address;
+    public void setFullAddress(String fullAddress) {
+        this.fullAddress = fullAddress;
     }
 
     public String getPhone() {
@@ -50,11 +55,32 @@ public class Address {
         this.phone = phone;
     }
 
-    public String getReceive_name() {
-        return receive_name;
+    public String getReceiveName() {
+        return receiveName;
     }
 
-    public void setReceive_name(String receive_name) {
-        this.receive_name = receive_name;
+    public void setReceiveName(String receiveName) {
+        this.receiveName = receiveName;
     }
+
+    public void inputData(User user) {
+        this.userId = user;
+        System.out.println("Mời bạn nhập vào địa chi: ");
+        this.fullAddress = InputMethods.getString();
+        System.out.println("Mời bạn nhập vào số điện thoại");
+        this.phone = InputMethods.getPhone();
+        System.out.println("Mời nhập vào tên người nhận");
+        this.receiveName = InputMethods.getString();
+    }
+
+
+    public void displayData() {
+//        System.out.println("+----+---------------+----------------------------------------------+---------------+--------------------+");
+//        System.out.println("| ID | ID_user       |                    Địa chỉ                   | Số điện thoại |   Tên người nhận   |");
+//        System.out.println("+----+---------------+----------------------------------------------+---------------+--------------------+");
+        System.out.printf("| %-2d | %-10s    | %-36s         |   %-10s  | %-18s |\n"
+                , this.addressId, this.userId.getUserName(), this.fullAddress, this.phone, this.receiveName );
+        System.out.println("+----+---------------+----------------------------------------------+---------------+--------------------+");
+    }
+
 }

@@ -1,11 +1,19 @@
 package util;
 
 
+import entity.Category;
+import entity.Products;
+import entity.User;
+import feature.impl.ProductsFeatureImpl;
+import feature.impl.UserFeatureImpl;
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static util.Colors.*;
 
@@ -30,6 +38,12 @@ public class InputMethods {
             }
         }
     }
+
+    public static String getNode() {
+        String result = getInput();
+        return result;
+    }
+
 
     /*
      * getChar() Trả về giá trị Ký tự từ người dùng.
@@ -74,6 +88,13 @@ public class InputMethods {
         }
     }
 
+    public static boolean checkExistedCategory(List<Category> list){
+        for(Category c : list){
+            if(c.isStatus())
+                return true;
+        }
+        return false;
+    }
     /**
      * getInteger() Trả về giá trị Integer từ người dùng.
      */
@@ -91,12 +112,30 @@ public class InputMethods {
         while (true) {
             try {
                 int input = Integer.parseInt(getString());
-                if (input > 0) {
+                if (input >= 0) {
                     return input;
                 } else {
-                    System.err.println(RED + "Số nhập vào phải lớn hơn 0." + RESET);
+                    System.err.println(RED + "Số nhập vào không nhỏ hơn 0." + RESET);
                 }
             } catch (NumberFormatException errException) {
+                System.err.println(ERROR_ALERT);
+            }
+        }
+    }
+
+    public static int getIntegerQuantity(Products product) {
+        while (true) {
+            try {
+                System.out.print(CYAN + "Nhập số lượng sản phẩm (tối đa " +RESET + YELLOW + product.getStockQuantity() + RESET  + CYAN + " ): " + RESET);
+                int input = Integer.parseInt(getString());
+                if (input <= 0) {
+                    System.err.println(RED + "Số lượng phải lớn hơn 0." + RESET);
+                } else if (input > product.getStockQuantity()) {
+                    System.err.println(RED + "Số lượng sản phẩm trong kho không đủ, vui lòng nhập lại." + RESET);
+                } else {
+                    return input;
+                }
+            } catch (NumberFormatException e) {
                 System.err.println(ERROR_ALERT);
             }
         }
@@ -148,7 +187,7 @@ public class InputMethods {
                 if (input > 0) {
                     return input;
                 } else {
-                    System.err.println("Số nhập vào phải lớn hơn 0.");
+                    System.err.println(RED + "Số nhập vào phải lớn hơn 0." + RESET);
                 }
             } catch (NumberFormatException errException) {
                 System.err.println(ERROR_ALERT);
@@ -229,6 +268,51 @@ public class InputMethods {
                 System.err.println(DATE_FORMAT);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static String getPhone() {
+        String regex = "^(0)\\d{9}$";
+        while (true) {
+            String phone = getString();
+            if (Pattern.matches(regex, phone)) {
+                boolean isExist = false;
+                for (User user : UserFeatureImpl.userList) {
+                    if (user.getPhone().equals(phone)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (isExist) {
+                    System.err.println(RED + "Số điện thoại đã tồn tại!" + RESET);
+                }
+                else {
+                    return phone;
+                }
+            }
+        }
+    }
+
+    public static String getMail() {
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        while (true) {
+            String email = getString();
+            if (Pattern.matches(regex, email)) {
+                boolean isExist = false;
+                for (User user : UserFeatureImpl.userList) {
+                    if (user.getPhone().equals(email)) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (isExist) {
+                    System.err.println(RED + "Email đã tồn tại,vui lòng nhập lại!" + RESET);
+                } else {
+                    return email;
+                }
+            } else {
+                System.err.println(RED + "Email không hợp lệ, vui lòng nhập lại!" + RESET);
             }
         }
     }

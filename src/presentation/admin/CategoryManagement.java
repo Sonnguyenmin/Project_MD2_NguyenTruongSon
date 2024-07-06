@@ -10,7 +10,8 @@ import java.util.Comparator;
 import static util.Colors.*;
 
 public class CategoryManagement {
-    private CategoriesFeatureImpl categoriesFeature = new CategoriesFeatureImpl();
+    public CategoriesFeatureImpl categoriesFeature = new CategoriesFeatureImpl();
+
     public CategoryManagement() {
         boolean isExist = true;
         do {
@@ -52,7 +53,7 @@ public class CategoryManagement {
                     isExist = false;
                     break;
                 default:
-                    System.err.println("Vui lòng nhập lại từ 1 -> 7");
+                    System.err.println(RED + "Vui lòng nhập lại từ 1 -> 7" + RESET);
             }
         } while (isExist);
     }
@@ -63,7 +64,7 @@ public class CategoryManagement {
         for (int i = 0; i < countCategory; i++) {
             System.out.println(GREEN + "Danh mục thứ " + (i + 1) + RESET);
             Category category = new Category();
-            category.setCategory_id(categoriesFeature.getNewId());
+            category.setCategoryId(categoriesFeature.getNewId());
             category.inputData();
             categoriesFeature.save(category);
         }
@@ -91,10 +92,8 @@ public class CategoryManagement {
             System.err.println(RED + "Không tồn tại danh mục" + RESET);
             return;
         }
-        Category newCategory = new Category();
-        newCategory.setCategory_id(category.getCategory_id());
-        newCategory.inputData();
-        categoriesFeature.save(newCategory);
+        category.inputData();
+        categoriesFeature.save(category);
         System.out.println(GREEN + "Đã thay đổi thành công danh mục "  + indexCategory + RESET);
     }
 
@@ -102,7 +101,6 @@ public class CategoryManagement {
         System.out.println(BLUE + "Bạn muốn xóa danh mục có mã là: " + RESET);
         int indexCategory = InputMethods.getInteger();
         categoriesFeature.delete(indexCategory);
-
     }
 
     private void handleSearchByCategory() {
@@ -110,7 +108,7 @@ public class CategoryManagement {
         String categoryName = InputMethods.getString();
         int countCategory = 0;
         for (Category category : categoriesFeature.getAll()) {
-            if (category.getCategory_name().equals(categoryName)) {
+            if (category.getCategoryName().equals(categoryName)) {
                 category.displayData();
                 countCategory++;
             }
@@ -123,7 +121,7 @@ public class CategoryManagement {
     }
 
     private void handleSortByCategory() {
-        categoriesFeature.getAll().sort(Comparator.comparing(Category::getCategory_name));
+        categoriesFeature.getAll().sort(Comparator.comparing(Category::getCategoryName));
         System.out.println("+----+----------------------+----------------------------------------------+--------------------+");
         System.out.println("| ID |     Tên danh mục     |               Mô tả danh mục                 |     Trạng thái     |");
         System.out.println("+----+----------------------+----------------------------------------------+--------------------+");

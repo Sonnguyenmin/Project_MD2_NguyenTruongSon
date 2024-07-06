@@ -1,16 +1,11 @@
 package presentation.admin;
 
-import entity.User;
-import feature.impl.UserFeatureImpl;
 import util.InputMethods;
 import util.Messages;
 
-import static util.Colors.BLUE;
-import static util.Colors.PURPLE;
+import static util.Colors.*;
 
 public class MenuAdminManagement {
-    private static User admin;
-    private static UserFeatureImpl userFeature;
 
     public MenuAdminManagement() {
         boolean isExist = true;
@@ -34,7 +29,7 @@ public class MenuAdminManagement {
                     new ProductManagement();
                     break;
                 case 3:
-
+                    new UserManagement();
                     break;
                 case 4:
                     break;

@@ -4,23 +4,23 @@ import constants.Roles;
 import util.InputMethods;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static util.Colors.*;
 
 public class User implements Serializable {
-    private int user_id;
+    private int userId;
     private String fullName, userName, password, email, phone, address, avatar;
-    private Date created_at, updated_at;
-    private boolean gender;
+    private Date createdAt, updatedAt;
     private Roles roles;
     private boolean status;
 
     public User() {
     }
 
-    public User(int user_id, String fullName, String userName, String password, String email, String phone, String address, String avatar, Date created_at, Date updated_at, boolean gender, Roles roles, boolean status) {
-        this.user_id = user_id;
+    public User(int userId, String fullName, String userName, String password, String email, String phone, String address, String avatar, Date createdAt, Date updatedAt, Roles roles, boolean status) {
+        this.userId = userId;
         this.fullName = fullName;
         this.userName = userName;
         this.password = password;
@@ -28,19 +28,18 @@ public class User implements Serializable {
         this.phone = phone;
         this.address = address;
         this.avatar = avatar;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.gender = gender;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.roles = roles;
         this.status = status;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getFullName() {
@@ -99,28 +98,20 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
-    public Date getCreated_at() {
-        return created_at;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getUpdated_at() {
-        return updated_at;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    public boolean isGender() {
-        return gender;
-    }
-
-    public void setGender(boolean gender) {
-        this.gender = gender;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Roles getRoles() {
@@ -140,24 +131,30 @@ public class User implements Serializable {
     }
 
     public void inputData() {
-        System.out.println("Mời nhập vào tên của bạn: ");
+        System.out.println(BLUE + "Mời nhập vào tên của bạn: " + RESET);
         this.fullName = InputMethods.getString();
-        System.out.println("Mời nhập vào tên đăng nhập của bạn (Không được có dấu cách): ");
+        System.out.println(BLUE + "Mời nhập vào địa chỉ của bạn: " + RESET);
+        this.address = InputMethods.getString();
+        System.out.println(BLUE + "Mời nhập vào số điện thoại của bạn: " + RESET);
+        this.phone = InputMethods.getPhone();
+        System.out.println(BLUE + "Mời nhập vào tên đăng nhập của bạn (Không được có dấu cách): " + RESET);
         this.userName = InputMethods.getString();
-        System.out.print("Mời nhập vào mật khẩu của bạn (Không được có dấu cách và lớn hơn 6): ");
+        System.out.println(BLUE + "Mời nhập vào email ( example@gmail.com): " + RESET);
+        this.email = InputMethods.getMail();
+        System.out.print(BLUE + "Mời nhập vào mật khẩu của bạn (Không được có dấu cách và lớn hơn 6): " + RESET);
         this.password = InputMethods.getString();
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
         this.status = true;
         this.roles = Roles.ROLE_USER;
     }
 
     public void displayData() {
-        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println("| ID | Tên đăng nhập |   Vai trò  |              Email              |           Địa chỉ          | Số điện thoại | Trạng thái |       Ngày tạo               |  ");
-        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.printf("| %-2d |    %-8s   | %-7s |          %-16s       |     %-16s    |  %-10s   |   %-8s | %-15s |\n"
-                ,this.getUser_id(),this.getUserName(), this.getRoles(),this.getEmail(), this.getAddress(),this.getPhone()
-                ,this.status  ? "Block" : "UnBlock", this.getCreated_at());
-        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.printf("| %-2d |    %-8s   | %-14s  |     %-21s       | %-30s |  %-10s   |   %-8s | %-10s |\n"
+                ,this.getUserId(),this.getUserName(), this.getRoles(),this.getEmail(), this.getAddress(),this.getPhone()
+                ,this.status  ? "UnBlock" : "Block", sdf.format(this.getCreatedAt()));
+        System.out.println("+----+---------------+-----------------+---------------------------------+--------------------------------+---------------+------------+------------+");
     }
 }
 
