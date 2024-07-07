@@ -7,10 +7,8 @@ import util.Messages;
 
 import java.util.ArrayList;
 import java.util.List;
-import static util.Colors.*;
 
 public class WishListFeatureImpl implements IWish_List {
-//
     public static List<WishList> wishListList =  (List<WishList>) IOFiles.readFromFile(IOFiles.Wish_List_PATH);
 
     public WishListFeatureImpl() {

@@ -1,8 +1,8 @@
 package presentation.users;
 
-import entity.Products;
-import entity.ShoppingCart;
-import entity.User;
+import entity.*;
+import feature.impl.OrderDetailFeatureImpl;
+import feature.impl.OrderFeatureImpl;
 import feature.impl.ProductsFeatureImpl;
 import feature.impl.ShoppingCartFeatureImpl;
 import presentation.run.MenuManagement;
@@ -16,6 +16,8 @@ import static util.Colors.*;
 public class ShoppingCartManagement {
     public ProductsFeatureImpl productsFeature = new ProductsFeatureImpl();
     public ShoppingCartFeatureImpl shoppingCartFeature = new ShoppingCartFeatureImpl();
+    public OrderFeatureImpl orderFeature = new OrderFeatureImpl();
+    public OrderDetailFeatureImpl orderDetailFeature = new OrderDetailFeatureImpl();
 
     public ShoppingCartManagement() {
         boolean isExist = true;
@@ -52,7 +54,7 @@ public class ShoppingCartManagement {
                     clearAllProductInCart();
                     break;
                 case 6:
-                    new OrderManagement();
+                    order();
                     break;
                 case 7:
                     isExist = false;
@@ -117,43 +119,46 @@ public class ShoppingCartManagement {
         if (!isExist) {
             System.err.println(RED + "Mã sản phẩm này không tồn tại!" + RESET);
         } else {
+
             ShoppingCart shoppingCart = shoppingCartFeature.getByUserAndProduct(user, addProduct);
             if (shoppingCart != null) {
                 System.out.println(BLUE + "Mời bạn nhập vào số lượng muốn thêm: " + RESET);
                 int countQuantity = InputMethods.getInteger();
-                shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() + countQuantity);
-                shoppingCartFeature.save(shoppingCart);
+                if (shoppingCart.getOrderQuantity() + countQuantity <= shoppingCart.getProductId().getStockQuantity()) {
+                    shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() + countQuantity);
+                    shoppingCartFeature.save(shoppingCart);
+                    System.out.println(GREEN + "Đã thêm sản phẩm vào giỏ hàng..." + RESET);
+                }
+                else {
+                    System.err.println(RED + "bạn đã nhập vượt quá số lượng của sản phẩm, mời bạn nhập lại" + RESET);
+                }
             } else {
-                ShoppingCart newCartItem = new ShoppingCart();
-                newCartItem.inputData(user, addProduct);
-                shoppingCartFeature.save(newCartItem);
+                shoppingCart = new ShoppingCart();
+                shoppingCart.inputData(user, addProduct);
+                shoppingCartFeature.save(shoppingCart);
+                System.out.println(GREEN + "Đã thêm sản phẩm vào giỏ hàng..." + RESET);
             }
-            System.out.println(GREEN + "Đã thêm sản phẩm vào giỏ hàng..." + RESET);
         }
     }
 
     public void deleteProductInCartByShoppingCart() {
-        System.out.println(BLUE + "Mời nhập mã sản phẩm muốn xóa có trong giỏ hàng: "+ RESET);
-        int IdShoppingCart = InputMethods.getInteger();
-        shoppingCartFeature.delete(IdShoppingCart);
-        System.out.println(GREEN + "Đã xóa thành công sản phẩm trong giỏ hàng!" + RESET);
-//        User user = MenuManagement.userLogin;
-//        System.out.println(BLUE + "Mời nhập mã sản phẩm muốn xóa có trong giỏ hàng: " + RESET);
-//        int shoppingCartId = InputMethods.getInteger();
-//        ShoppingCart shoppingCartToRemove = null;
-//        for (ShoppingCart shoppingCart : shoppingCartFeature.getAll()) {
-//            if (shoppingCart.getShoppingCartId() == shoppingCartId && shoppingCart.getUserId().getUserId() == user.getUserId()) {
-//                shoppingCartToRemove = shoppingCart;
-//                break;
-//            }
-//        }
-//
-//        if (shoppingCartToRemove != null) {
-//            shoppingCartFeature.delete(shoppingCartToRemove);
-//            System.out.println(GREEN + "Đã xóa thành công sản phẩm trong giỏ hàng!" + RESET);
-//        } else {
-//            System.err.println(RED + "Không tìm thấy sản phẩm với mã số đã nhập trong giỏ hàng!" + RESET);
-//        }
+        User user = MenuManagement.userLogin;
+        System.out.println(BLUE + "Mời nhập mã sản phẩm muốn xóa có trong giỏ hàng: " + RESET);
+        int shoppingCartId = InputMethods.getInteger();
+        ShoppingCart shoppingCartToRemove = null;
+        for (ShoppingCart shoppingCart : shoppingCartFeature.getAll()) {
+            if (shoppingCart.getShoppingCartId() == shoppingCartId && shoppingCart.getUserId().getUserId() == user.getUserId()) {
+                shoppingCartToRemove = shoppingCart;
+                break;
+            }
+        }
+
+        if (shoppingCartToRemove != null) {
+            shoppingCartFeature.delete(shoppingCartId);
+            System.out.println(GREEN + "Đã xóa thành công sản phẩm trong giỏ hàng!" + RESET);
+        } else {
+            System.err.println(RED + "Không tìm thấy sản phẩm với mã số đã nhập trong giỏ hàng!" + RESET);
+        }
     }
 
     public void clearAllProductInCart() {
@@ -161,5 +166,36 @@ public class ShoppingCartManagement {
         shoppingCartsList = shoppingCartFeature.getAll().stream().filter(item -> item.getUserId().getUserId() != user.getUserId()).toList();
         IOFiles.writeToFile(shoppingCartsList, IOFiles.SHOPPING_CART_PATH);
         System.out.println(GREEN + "Đã xóa thành công tất cả sản phẩm trong giỏ hàng!" + RESET);
+    }
+
+    public void order() {
+        User user = MenuManagement.userLogin;
+        Orders newOrder = new Orders();
+        if (user == null) {
+            System.err.println("Vui lòng đăng nhập để xem đơn hàng!");
+            return;
+        }
+        if (shoppingCartFeature.getAll().stream().filter(item-> item.getUserId().getUserId() == user.getUserId()).count() <= 0) {
+            System.out.println(Messages.IS_EMPTY);
+            return;
+        }
+        newOrder.inputData(user);
+        for (ShoppingCart shoppingCart : shoppingCartFeature.getAll()) {
+            if (shoppingCart.getUserId().getUserId() == user.getUserId()) {
+                OrderDetails orderDetails = new OrderDetails();
+                orderDetails.setProductId(shoppingCart.getProductId());
+                orderDetails.setOrderQuantity(shoppingCart.getOrderQuantity());
+                // giam so luong san pham
+                Products products = shoppingCart.getProductId();
+                products.setStockQuantity(products.getStockQuantity() - shoppingCart.getOrderQuantity());
+                productsFeature.save(products);
+                orderDetailFeature.save(orderDetails);
+            }
+        }
+        orderFeature.save(newOrder);
+        // xoa shopping cart
+        shoppingCartsList = shoppingCartFeature.getAll().stream().filter(item -> item.getUserId().getUserId() != user.getUserId()).toList();
+        IOFiles.writeToFile(shoppingCartsList, IOFiles.SHOPPING_CART_PATH);
+        System.out.println(GREEN + "Bạn đã dặt hàng thành công !" + RESET);
     }
 }

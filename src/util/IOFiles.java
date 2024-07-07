@@ -12,6 +12,7 @@ public class IOFiles {
     public static final String SHOPPING_CART_PATH = "src/database/shoppingCart.txt";
     public static final String Wish_List_PATH = "src/database/wishList.txt";
     public static final String Order_PATH = "src/database/order.txt";
+    public static final String ORDER_DETAIL_PATH = "src/database/orderDetail.txt";
 
     public static void writeToFile(Object o, String path) {
         FileOutputStream fos = null;

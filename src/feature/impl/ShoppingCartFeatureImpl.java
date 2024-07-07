@@ -10,8 +10,6 @@ import util.Messages;
 import java.util.ArrayList;
 import java.util.List;
 
-import static util.Colors.*;
-
 public class ShoppingCartFeatureImpl implements IShoppingCart {
     public static List<ShoppingCart> shoppingCartsList = (List<ShoppingCart>) IOFiles.readFromFile(IOFiles.SHOPPING_CART_PATH);
 
@@ -80,26 +78,5 @@ public class ShoppingCartFeatureImpl implements IShoppingCart {
             }
         }
         return null;
-    }
-
-
-    // Giỏ hàng tăng
-    public void productIncreases (Products product) {
-        product.setStockQuantity(product.getStockQuantity() + 1);
-    }
-
-    // Giỏ hàng giảm
-    public void productDecreases (Products product) {
-        product.setStockQuantity(product.getStockQuantity() - 1);
-    }
-
-    //Giỏ hàng tăng theo số lượng
-    public void ProductIncreasesByNumber (Products product, int number) {
-        product.setStockQuantity(product.getStockQuantity() + number);
-    }
-
-    //Giỏ hàng giảm theo số lượng
-    public void ProductDecreasesByNumber (Products product, int number) {
-        product.setStockQuantity(product.getStockQuantity() - number);
     }
 }

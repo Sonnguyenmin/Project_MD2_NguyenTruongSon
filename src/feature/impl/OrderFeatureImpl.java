@@ -33,6 +33,7 @@ public class OrderFeatureImpl implements IOrder {
     @Override
     public void save(Orders element) {
         if (findById(element.getOrderId()) == null) {
+            element.setOrderId(getNewId());
             ordersList.add(element);
         }
         else {

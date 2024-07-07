@@ -1,17 +1,12 @@
 package feature.impl;
 
 import entity.Products;
-
-import entity.ShoppingCart;
 import feature.IProduct;
 import util.IOFiles;
 import util.Messages;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static util.Colors.GREEN;
-import static util.Colors.RESET;
 
 public class ProductsFeatureImpl implements IProduct {
 
@@ -71,23 +66,4 @@ public class ProductsFeatureImpl implements IProduct {
         }
         return maxId + 1;
     }
-
-
-    // Giỏ hàng tăng
-    public void shoppingCartIncreases (ShoppingCart shoppingCart) {
-        shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() + 1);
-    }
-    // Giỏ hàng giảm
-    public void shoppingCartReduce (ShoppingCart shoppingCart) {
-        shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() - 1);
-    }
-    // Tăng Giỏ hàng theo số lượng
-    public void shoppingCartIncreasesByNumber (ShoppingCart shoppingCart, int number) {
-        shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() + number);
-    }
-    //Giảm Giỏ hàng theo số lượng
-    public void shoppingCartDecreasesByNumber (ShoppingCart shoppingCart, int number) {
-        shoppingCart.setOrderQuantity(shoppingCart.getOrderQuantity() - number);
-    }
-
 }

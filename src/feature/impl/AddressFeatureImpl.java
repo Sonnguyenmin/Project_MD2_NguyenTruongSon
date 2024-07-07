@@ -8,8 +8,6 @@ import util.Messages;
 import java.util.ArrayList;
 import java.util.List;
 
-import static util.Colors.*;
-
 public class AddressFeatureImpl implements IAddress {
     public static List<Address> addressList = (List<Address>) IOFiles.readFromFile(IOFiles.ADDRESS_PATH);
 
@@ -45,7 +43,6 @@ public class AddressFeatureImpl implements IAddress {
             System.out.println(Messages.NOT_FOUND);
         }
         addressList.remove(findById(id));
-//        System.out.println(GREEN + "Đã xóa thành công địa chỉ "  + RESET);
         IOFiles.writeToFile(addressList, IOFiles.ADDRESS_PATH);
     }
 

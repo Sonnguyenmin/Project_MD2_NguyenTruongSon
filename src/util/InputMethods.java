@@ -40,7 +40,7 @@ public class InputMethods {
     }
 
     public static String getNode() {
-        String result = getInput();
+        String result = getString();
         return result;
     }
 

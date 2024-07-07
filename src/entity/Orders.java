@@ -1,15 +1,18 @@
 package entity;
 
 import constants.OrderStatus;
+import feature.impl.ShoppingCartFeatureImpl;
+import feature.impl.UserFeatureImpl;
 import util.InputMethods;
 import util.Validate;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
+
+import static util.Colors.BLUE;
+import static util.Colors.RESET;
 
 public class Orders implements Serializable {
     private int orderId;
@@ -129,34 +132,51 @@ public class Orders implements Serializable {
         this.receivedAt = receivedAt;
     }
 
-    public void inputData(User user, Address address, Products products, double totalPrice) {
+
+
+    public void inputData(User user) {
         this.serialNumber = UUID.randomUUID().toString();
         this.userId = user;
-        this.totalPrice = totalPrice;
-        this.receiveAddress = address.getFullAddress();
-        this.receivePhone = address.getPhone();
-        this.receiveName = address.getReceiveName();
+        this.totalPrice = calculateTotalPrice(user);
+        this.receiveAddress = user.getAddress();
+        this.receivePhone = user.getPhone();
+        this.receiveName = user.getFullName();
         this.orderStatus = OrderStatus.WAITING;
+        System.out.println(BLUE + "Mời bạn nhập vào nội dung: " + RESET);
         this.note = InputMethods.getNode();
         this.createAt = new Date();
         this.receivedAt = Validate.inputReceiveAt(this.createAt);
+    }
+
+    public double calculateTotalPrice(User user) {
+        if (user == null) {
+            System.err.println("Bạn phải đăng nhâp");
+            return 0.0;
+        }
+        else {
+            List<ShoppingCart> shoppingCartsList = ShoppingCartFeatureImpl.shoppingCartsList.stream().filter(item -> item.getUserId().getUserId() ==user.getUserId()).toList();
+            double totalPrice = 0;
+            for (ShoppingCart shoppingCart : shoppingCartsList) {
+                totalPrice += shoppingCart.getOrderQuantity() * shoppingCart.getProductId().getUnitPrice();
+            }
+            return totalPrice;
+        }
     }
 
     public void displayData() {
         NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-        System.out.println("+----+---------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
-        System.out.println("| ID |     Tên khách hàng, Số seri     |    Tổng tiền    | Trạng thái đơn hàng |   Địa chỉ, Người nhận, Số điện thoại |   Ngày mua   |   Ngày nhân   |");
-        System.out.println("+----+---------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
-
-        String formPrintFirst = "| %-3d |  %-29s  |  %-13  |   %-15s   |    %-30s   | %-12s | %-12s |";
-        String formPrintNext =  "|      |  %-29s  |        |           |    %-30s   |       |       |";
-        String formPrintLast =  "|      |         |        |           |    %-30s   |       |       |";
-        System.out.printf(formPrintFirst, this.orderId, this.userId.getUserName(), vndFormat.format(this.totalPrice), this.orderStatus, this.receiveName, sdf.format(this.createAt), sdf.format(this.receivedAt));
-        System.out.printf(formPrintNext, this.orderId, this.serialNumber, this.totalPrice, this.orderStatus, this.receiveAddress, sdf.format(this.createAt), sdf.format(this.receivedAt));
-        System.out.printf(formPrintLast, this.orderId, this.userId.getUserName(), this.totalPrice, this.orderStatus, this.receivePhone, sdf.format(this.createAt), sdf.format(this.receivedAt));
-        System.out.println("+----+---------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+//        System.out.println("+----+--------------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+//        System.out.println("| ID |        Tên khách hàng, Số seri       |    Tổng tiền    | Trạng thái đơn hàng |   Địa chỉ, Người nhận, Số điện thoại |   Ngày mua   |   Ngày nhân   |");
+//        System.out.println("+----+--------------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+        String formPrintFirst = "| %-3d| %-34s   |  %-13s  |   %-15s   |    %-31s   | %-12s |  %-11s  |\n";
+        String formPrintNext =  "|    | %-32s |                 |                     |    %-31s   |              |               |\n";
+        String formPrintLast =  "|    |                                      |                 |                     |    %-31s   |              |               |\n";
+        System.out.printf(formPrintFirst, this.orderId, this.userId.getUserName(), vndFormat.format(this.totalPrice ), this.orderStatus, this.receiveName, sdf.format(this.createAt), sdf.format(this.receivedAt));
+        System.out.printf(formPrintNext, this.serialNumber, this.receiveAddress);
+        System.out.printf(formPrintLast, this.receivePhone);
+        System.out.println("+----+--------------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
     }
 }
 

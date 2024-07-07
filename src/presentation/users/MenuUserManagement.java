@@ -1,11 +1,7 @@
 package presentation.users;
 
-import entity.Category;
-import entity.Products;
-import entity.User;
-import feature.impl.CategoriesFeatureImpl;
-import feature.impl.ProductsFeatureImpl;
-import feature.impl.UserFeatureImpl;
+import entity.*;
+import feature.impl.*;
 import presentation.run.MenuManagement;
 import util.InputMethods;
 import util.Messages;
@@ -20,6 +16,8 @@ public class MenuUserManagement {
     private final UserFeatureImpl userFeature = new UserFeatureImpl();
     private final ProductsFeatureImpl productsFeature = new ProductsFeatureImpl();
     private final CategoriesFeatureImpl categoriesFeature = new CategoriesFeatureImpl();
+    private final OrderFeatureImpl orderFeature = new OrderFeatureImpl();
+    private final OrderDetailFeatureImpl orderDetailFeature = new OrderDetailFeatureImpl();
 
     public MenuUserManagement() {
         boolean isExist = true;
@@ -72,6 +70,7 @@ public class MenuUserManagement {
                     new ShoppingCartManagement();
                     break;
                 case 10:
+                    showOrderDetail();
                     break;
                 case 11:
                     isExist = false;
@@ -210,4 +209,23 @@ public class MenuUserManagement {
         }
     }
 
+    public void showOrderDetail() {
+        User user = MenuManagement.userLogin;
+        if (user == null) {
+            System.err.println("Vui lòng đăng nhập để xem đơn hàng!");
+            return;
+        }
+        if ( orderFeature.getAll().stream().filter(item-> item.getUserId().getUserId() == user.getUserId()).count() <= 0) {
+            System.out.println(Messages.IS_EMPTY);
+            return;
+        }
+        System.out.println("+----+--------------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+        System.out.println("| ID |        Tên khách hàng, Số seri       |    Tổng tiền    | Trạng thái đơn hàng |   Địa chỉ, Người nhận, Số điện thoại |   Ngày mua   |   Ngày nhập   |");
+        System.out.println("+----+--------------------------------------+-----------------+---------------------+--------------------------------------+--------------+---------------+");
+        for (Orders orders : orderFeature.getAll()) {
+            if (orders.getUserId().getUserId() == user.getUserId()) {
+                orders.displayData();
+            }
+        }
+    }
 }
